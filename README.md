@@ -1,5 +1,10 @@
 # markdown-table
 
+[![License: MIT][license-mit]](LICENSE)
+[![Build Status][build-status-master]][travis-ci]
+[![Maintainability][maintainability-badge]][maintainability]
+[![Test Coverage][coverage-badge]][coverage]
+
 Create a [Markdown][markdown] table containing your data.
 
 **This project is still work in progress.** Please come back another day.
@@ -75,5 +80,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
+[license-mit]: https://img.shields.io/badge/license-MIT-blue.svg
+[travis-ci]: https://travis-ci.org/the-kbA-team/markdown-table "the-kbA-team/markdown-table - Travis CI"
+[build-status-master]: https://api.travis-ci.org/the-kbA-team/markdown-table.svg?branch=master
+[maintainability-badge]: https://api.codeclimate.com/v1/badges/ef2542e986fda45f718f/maintainability
+[maintainability]: ]https://codeclimate.com/github/the-kbA-team/markdown-table/maintainability
+[coverage-badge]: https://api.codeclimate.com/v1/badges/ef2542e986fda45f718f/test_coverage
+[coverage]: https://codeclimate.com/github/the-kbA-team/markdown-table/test_coverage
 [markdown]: https://daringfireball.net/projects/markdown/ "Markdown is a text-to-HTML conversion tool for web writers."
 [composer]: https://getcomposer.org/ "Dependency Manager for PHP"
