@@ -127,6 +127,14 @@ class Column
     }
 
     /**
+     * Reset a columns maximum length to a minimum of three or the title length.
+     */
+    public function resetMaxLength()
+    {
+        $this->length = max(3, mb_strlen($this->title));
+    }
+
+    /**
      * Create a column cell string using the given content.
      * @param string $content The cells' content.
      * @return string The cells content with spaces to fill the whole cell length.
