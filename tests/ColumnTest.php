@@ -71,7 +71,7 @@ class ColumnTest extends \PHPUnit_Framework_TestCase
      */
     public function testNonStringAsTitle()
     {
-        $this->setExpectedException('\RuntimeException', 'Column title is no string.');
+        $this->setExpectedException(\RuntimeException::class, 'Column title is no string.');
         new Column(new \stdClass());
     }
 
@@ -80,7 +80,7 @@ class ColumnTest extends \PHPUnit_Framework_TestCase
      */
     public function testShortTitle()
     {
-        $this->setExpectedException('\RuntimeException', 'Column title is too short.');
+        $this->setExpectedException(\RuntimeException::class, 'Column title is too short.');
         new Column('`');
     }
 
@@ -89,7 +89,7 @@ class ColumnTest extends \PHPUnit_Framework_TestCase
      */
     public function testInvalidAlignment()
     {
-        $this->setExpectedException('\RuntimeException', 'Invalid alignment constant.');
+        $this->setExpectedException(\RuntimeException::class, 'Invalid alignment constant.');
         new Column('My Column', 1000);
     }
 
@@ -99,7 +99,7 @@ class ColumnTest extends \PHPUnit_Framework_TestCase
     public function testUnexpectedlyLongContent()
     {
         $a = new Column('AAA');
-        $this->setExpectedException('\RuntimeException', 'Content length too long.');
+        $this->setExpectedException(\RuntimeException::class, 'Content length too long.');
         $a->createCell('aaaa');
     }
 
@@ -109,7 +109,7 @@ class ColumnTest extends \PHPUnit_Framework_TestCase
     public function testNonIntegerMaxLength()
     {
         $a = new Column('AAA');
-        $this->setExpectedException('\RuntimeException', 'Column length needs to be a positive integer.');
+        $this->setExpectedException(\RuntimeException::class, 'Column length needs to be a positive integer.');
         $a->setMaxLength('a');
     }
 }
