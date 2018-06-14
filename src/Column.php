@@ -92,7 +92,7 @@ class Column
     /**
      * Set the columns' alignment.
      * @param int $alignment The columns' alignment.
-     * @throws \RuntimeException in case the given alignment is no aligment constant.
+     * @throws \RuntimeException in case the given alignment is no alignment constant.
      */
     public function setAlignment($alignment)
     {
@@ -130,7 +130,7 @@ class Column
      * Create a column cell string using the given content.
      * @param string $content The cells' content.
      * @return string The cells content with spaces to fill the whole cell length.
-     * @throws \RuntimeException in case the given content is longer than the maximum lenght of this cell.
+     * @throws \RuntimeException in case the given content is longer than the maximum length of this cell.
      */
     public function createCell($content)
     {
