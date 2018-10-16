@@ -84,7 +84,7 @@ SOFTWARE.
 [travis-ci]: https://travis-ci.org/the-kbA-team/markdown-table "the-kbA-team/markdown-table - Travis CI"
 [build-status-master]: https://api.travis-ci.org/the-kbA-team/markdown-table.svg?branch=master
 [maintainability-badge]: https://api.codeclimate.com/v1/badges/ef2542e986fda45f718f/maintainability
-[maintainability]: ]https://codeclimate.com/github/the-kbA-team/markdown-table/maintainability
+[maintainability]: https://codeclimate.com/github/the-kbA-team/markdown-table/maintainability
 [coverage-badge]: https://api.codeclimate.com/v1/badges/ef2542e986fda45f718f/test_coverage
 [coverage]: https://codeclimate.com/github/the-kbA-team/markdown-table/test_coverage
 [markdown]: https://daringfireball.net/projects/markdown/ "Markdown is a text-to-HTML conversion tool for web writers."
