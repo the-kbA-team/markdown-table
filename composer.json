@@ -1,8 +1,15 @@
 {
     "name": "kba-team/markdown-table",
-    "description": "Create a markdown table containing your data.",
+    "description": "Create a markdown table string from an associative array.",
     "type": "library",
     "license": "MIT",
+    "authors": [
+        {
+            "name": "Gregor J.",
+            "email": "gregor-j@users.noreply.github.com",
+            "role": "developer"
+        }
+    ],
     "support": {
         "issues": "https://github.com/the-kbA-team/markdown-table/issues"
     },
@@ -28,5 +35,11 @@
         "psr-4": {
             "Tests\\kbATeam\\MarkdownTable\\": "tests/"
         }
+    },
+    "scripts": {
+        "tests": "vendor/bin/phpunit"
+    },
+    "scripts-descriptions": {
+        "tests": "Run all unit tests."
     }
 }
