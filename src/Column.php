@@ -142,7 +142,7 @@ class Column
      * @return string The cells content with spaces to fill the whole cell length.
      * @throws \RuntimeException in case the given content is longer than the maximum length of this cell.
      */
-    public function createCell($content)
+    public function createCell($content): string
     {
         $diff = $this->length - mb_strlen($content);
 
@@ -176,7 +176,7 @@ class Column
      * Creates the column header string.
      * @return string The column header string.
      */
-    public function createHeader()
+    public function createHeader(): string
     {
         return $this->createCell($this->title);
     }
@@ -185,7 +185,7 @@ class Column
      * Creates the column header separator string.
      * @return string The column header separator string.
      */
-    public function createHeaderSeparator()
+    public function createHeaderSeparator(): string
     {
         switch ($this->alignment) {
             case self::ALIGN_RIGHT:

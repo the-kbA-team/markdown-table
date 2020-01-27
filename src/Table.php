@@ -49,7 +49,7 @@ class Table
      * Remove all defined columns from this table.
      * @return \kbATeam\MarkdownTable\Table $this
      */
-    public function clearColumns()
+    public function clearColumns(): Table
     {
         $this->columns = [];
         $this->column_count = 0;
@@ -62,7 +62,7 @@ class Table
      * @param \kbATeam\MarkdownTable\Column $column
      * @return \kbATeam\MarkdownTable\Table $this
      */
-    public function addColumn($pos, Column $column)
+    public function addColumn($pos, Column $column): Table
     {
         if (!array_key_exists($pos, $this->columns)) {
             //Counts the columns up as they are added.
@@ -79,7 +79,7 @@ class Table
      * @return \kbATeam\MarkdownTable\Column
      * @throws \RuntimeException in case the given position does not exist.
      */
-    public function getColumn($pos)
+    public function getColumn($pos): Column
     {
         if (!array_key_exists($pos, $this->columns)) {
             throw new RuntimeException(sprintf('Column position %s does not exist!', $pos));
@@ -92,7 +92,7 @@ class Table
      * Determine whether this table has columns.
      * @return bool
      */
-    public function hasColumns()
+    public function hasColumns(): bool
     {
         return $this->column_count > 0;
     }
@@ -102,7 +102,7 @@ class Table
      * @param string|int $pos The column position to remove.
      * @return \kbATeam\MarkdownTable\Table $this
      */
-    public function dropColumn($pos)
+    public function dropColumn($pos): Table
     {
         if (array_key_exists($pos, $this->columns)) {
             $this->column_count--;
@@ -207,7 +207,7 @@ class Table
      * @throws \RuntimeException in case no columns are defined, or in case the rows
      *                           parameter is not an array of arrays.
      */
-    public function getString(array $rows)
+    public function getString(array $rows): string
     {
         $result = '';
         foreach ($this->generate($rows) as $row) {
