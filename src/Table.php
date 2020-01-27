@@ -2,6 +2,8 @@
 
 namespace kbATeam\MarkdownTable;
 
+use RuntimeException;
+
 /**
  * Class kbATeam\MarkdownTable\Table
  *
@@ -80,7 +82,7 @@ class Table
     public function getColumn($pos)
     {
         if (!array_key_exists($pos, $this->columns)) {
-            throw new \RuntimeException(sprintf('Column position %s does not exist!', $pos));
+            throw new RuntimeException(sprintf('Column position %s does not exist!', $pos));
         }
 
         return $this->columns[$pos];
@@ -129,7 +131,7 @@ class Table
     public function generate(array $rows)
     {
         if (!$this->hasColumns()) {
-            throw new \RuntimeException('No columns defined.');
+            throw new RuntimeException('No columns defined.');
         }
 
         $this->resetColumnLengths();
@@ -144,7 +146,7 @@ class Table
              * Detect malformed rows array.
              */
             if (!is_array($row)) {
-                throw new \RuntimeException('Rows need to be an array of arrays.');
+                throw new RuntimeException('Rows need to be an array of arrays.');
             }
             /**
              * Get the content of each defined column from the row.

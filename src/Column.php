@@ -2,6 +2,8 @@
 
 namespace kbATeam\MarkdownTable;
 
+use RuntimeException;
+
 /**
  * Class kbATeam\MarkdownTable\Column
  *
@@ -73,7 +75,7 @@ class Column
     public function setTitle($title)
     {
         if (!is_string($title)) {
-            throw new \RuntimeException('Column title is no string.');
+            throw new RuntimeException('Column title is no string.');
         }
 
         $this->title = filter_var(
@@ -84,7 +86,7 @@ class Column
 
         if (false === $this->title || $this->title === '') {
             $this->title = null;
-            throw new \RuntimeException('Column title is too short.');
+            throw new RuntimeException('Column title is too short.');
         }
         $this->setMaxLength(mb_strlen($this->title));
     }
@@ -108,7 +110,7 @@ class Column
 
         if (0 === $this->alignment) {
             $this->alignment = null;
-            throw new \RuntimeException('Invalid alignment constant.');
+            throw new RuntimeException('Invalid alignment constant.');
         }
     }
 
@@ -120,7 +122,7 @@ class Column
     public function setMaxLength($length)
     {
         if (!is_int($length) || $length < 0) {
-            throw new \RuntimeException('Column length needs to be a positive integer.');
+            throw new RuntimeException('Column length needs to be a positive integer.');
         }
         
         $this->length = max($this->length, $length);
@@ -145,7 +147,7 @@ class Column
         $diff = $this->length - mb_strlen($content);
 
         if ($diff < 0) {
-            throw new \RuntimeException('Content length too long.');
+            throw new RuntimeException('Content length too long.');
         }
 
         switch ($this->alignment) {
