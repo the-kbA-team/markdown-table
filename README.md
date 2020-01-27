@@ -5,7 +5,11 @@
 
 Create a [Markdown][markdown] table containing your data.
 
-**This project is still work in progress.** Please come back another day.
+## Install
+
+```
+composer require kba-team/markdown-table
+```
 
 ## Usage
 
