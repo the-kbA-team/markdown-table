@@ -1,10 +1,8 @@
 language: php
-sudo: false
+dist: trusty
 php:
   - 5.5
   - 5.6
-  - 7.0
-  - 7.1
 env:
   global:
     - CC_TEST_REPORTER_ID=6b1e75a0e03ff7aa33d9473326f5fcb9e14bfe1c8b1063cb6b602f89ab872ec4
