@@ -3,8 +3,10 @@
 namespace Tests\kbATeam\MarkdownTable;
 
 use kbATeam\MarkdownTable\Column;
+use PHPUnit\Framework\TestCase;
+use RuntimeException;
 
-class ColumnTest extends \PHPUnit_Framework_TestCase
+class ColumnTest extends TestCase
 {
     /**
      * Test creating a left aligned column.
@@ -71,7 +73,9 @@ class ColumnTest extends \PHPUnit_Framework_TestCase
      */
     public function testNonStringAsTitle()
     {
-        $this->setExpectedException(\RuntimeException::class, 'Column title is no string.');
+        self::expectException(RuntimeException::class);
+        self::expectExceptionMessage('Column title is no string.');
+        /** @noinspection PhpParamsInspection */
         new Column(new \stdClass());
     }
 
@@ -80,7 +84,8 @@ class ColumnTest extends \PHPUnit_Framework_TestCase
      */
     public function testShortTitle()
     {
-        $this->setExpectedException(\RuntimeException::class, 'Column title is too short.');
+        self::expectException(RuntimeException::class);
+        self::expectExceptionMessage('Column title is too short.');
         new Column('`');
     }
 
@@ -89,7 +94,8 @@ class ColumnTest extends \PHPUnit_Framework_TestCase
      */
     public function testInvalidAlignment()
     {
-        $this->setExpectedException(\RuntimeException::class, 'Invalid alignment constant.');
+        self::expectException(RuntimeException::class);
+        self::expectExceptionMessage('Invalid alignment constant.');
         new Column('My Column', 1000);
     }
 
@@ -99,7 +105,8 @@ class ColumnTest extends \PHPUnit_Framework_TestCase
     public function testUnexpectedlyLongContent()
     {
         $a = new Column('AAA');
-        $this->setExpectedException(\RuntimeException::class, 'Content length too long.');
+        self::expectException(RuntimeException::class);
+        self::expectExceptionMessage('Content length too long.');
         $a->createCell('aaaa');
     }
 
@@ -109,7 +116,8 @@ class ColumnTest extends \PHPUnit_Framework_TestCase
     public function testNonIntegerMaxLength()
     {
         $a = new Column('AAA');
-        $this->setExpectedException(\RuntimeException::class, 'Column length needs to be a positive integer.');
+        self::expectException(RuntimeException::class);
+        self::expectExceptionMessage('Column length needs to be a positive integer.');
         $a->setMaxLength('a');
     }
 }
