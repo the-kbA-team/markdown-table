@@ -2,9 +2,9 @@ name: PHP Composer & PHPUnit
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, phpunit8 ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, phpunit8 ]
 
 jobs:
   phpunit-with-coverage:
