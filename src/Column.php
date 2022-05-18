@@ -7,7 +7,7 @@ use RuntimeException;
 /**
  * Class kbATeam\MarkdownTable\Column
  *
- * Manages column attributes of a markdown table.
+ * Manages column attributes of a Markdown table.
  *
  * @category library
  * @package  kbATeam\MarkdownTable

@@ -7,7 +7,7 @@ use RuntimeException;
 /**
  * Class kbATeam\MarkdownTable\Table
  *
- * Generates a markdown table for a fixed number of columns from an array of rows.
+ * Generates a Markdown table for a fixed number of columns from an array of rows.
  *
  * @category library
  * @package  kbATeam\MarkdownTable
@@ -122,8 +122,8 @@ class Table
     }
 
     /**
-     * Generate a markdown table from the defined columns and their rows.
-     * @param array $rows Rows of the markdown table.
+     * Generate a Markdown table from the defined columns and their rows.
+     * @param array $rows Rows of the Markdown table.
      * @return \Generator generates a string for each row including the headers.
      * @throws \RuntimeException in case no columns are defined, or in case the rows
      *                           parameter is not an array of arrays.
@@ -137,7 +137,7 @@ class Table
         $this->resetColumnLengths();
 
         /**
-         * Process each row, clean each cells string and determine the maximum
+         * Process each row, clean each cell's string and determine the maximum
          * length of each cell based on the cleaned string. Missing cells in a row
          * get replaced by an empty string.
          */
@@ -201,9 +201,9 @@ class Table
     }
 
     /**
-     * Get a markdown table as string with line breaks.
+     * Get a Markdown table as string with line breaks.
      * @param array $rows The rows to create a table from.
-     * @return string The markdown table.
+     * @return string The Markdown table.
      * @throws \RuntimeException in case no columns are defined, or in case the rows
      *                           parameter is not an array of arrays.
      */
