@@ -4,8 +4,10 @@ namespace Tests\kbATeam\MarkdownTable;
 
 use kbATeam\MarkdownTable\Column;
 use kbATeam\MarkdownTable\Table;
+use PHPUnit\Framework\TestCase;
+use RuntimeException;
 
-class TableTest extends \PHPUnit_Framework_TestCase
+class TableTest extends TestCase
 {
     /**
      * Test a simple one-column table with a data array.
@@ -91,7 +93,8 @@ class TableTest extends \PHPUnit_Framework_TestCase
     public function testExceptionNonExistentColumnPosition()
     {
         $t = new Table(['first_name']);
-        $this->setExpectedException(\RuntimeException::class, 'Column position last_name does not exist!');
+        self::expectException(RuntimeException::class);
+        self::expectExceptionMessage('Column position last_name does not exist!');
         $t->getColumn('last_name');
     }
 
@@ -101,7 +104,8 @@ class TableTest extends \PHPUnit_Framework_TestCase
     public function testExceptionWithNoColumnsDefined()
     {
         $t = new Table();
-        $this->setExpectedException(\RuntimeException::class, 'No columns defined.');
+        self::expectException(RuntimeException::class);
+        self::expectExceptionMessage('No columns defined.');
         $t->getString([['first_name' => 'Sven', 'last_name' => 'Frey']]);
     }
 
@@ -111,7 +115,8 @@ class TableTest extends \PHPUnit_Framework_TestCase
     public function testExceptionWithOneDimensionalArray()
     {
         $t = new Table(['first_name', 'last_name']);
-        $this->setExpectedException(\RuntimeException::class, 'Rows need to be an array of arrays.');
+        self::expectException(RuntimeException::class);
+        self::expectExceptionMessage('Rows need to be an array of arrays.');
         $t->getString(['first_name' => 'Sven', 'last_name' => 'Frey']);
     }
 }

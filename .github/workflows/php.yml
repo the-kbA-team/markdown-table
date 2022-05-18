@@ -1,0 +1,62 @@
+name: PHP Composer & PHPUnit
+
+on: [push, pull_request]
+
+jobs:
+  phpunit-with-coverage:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php-version: [ '7.2', '7.4' ]
+    env:
+      CC_TEST_REPORTER_ID: 6b1e75a0e03ff7aa33d9473326f5fcb9e14bfe1c8b1063cb6b602f89ab872ec4
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup PHP ${{ matrix.php-version }}
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php-version }}
+        coverage: xdebug
+    - name: Validate composer.json and composer.lock
+      run: composer validate --strict
+    - name: Cache Composer packages
+      id: composer-cache
+      uses: actions/cache@v2
+      with:
+        path: vendor
+        key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-php-
+    - name: Install dependencies
+      run: composer install --prefer-dist --no-progress
+    - name: CodeClimate Reporter Setup
+      run: |
+        curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+        chmod +x ./cc-test-reporter
+        ./cc-test-reporter before-build
+    - name: Run test suite
+      run: |
+        php vendor/bin/phpunit --coverage-clover clover.xml --coverage-text
+        ./cc-test-reporter after-build -t clover --exit-code $?
+
+  phpunit-only:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php-version: [ '7.2', '7.4', '8.1' ]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Validate composer.json and composer.lock
+        run: composer validate --strict
+      - name: Cache Composer packages
+        id: composer-cache
+        uses: actions/cache@v2
+        with:
+          path: vendor
+          key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-php-
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress
+      - name: Run test suite
+        run: php vendor/bin/phpunit
