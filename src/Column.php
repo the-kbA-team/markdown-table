@@ -19,17 +19,17 @@ class Column
     /**
      * @const int column alignment left
      */
-    const ALIGN_LEFT = 1;
+    public const ALIGN_LEFT = 1;
 
     /**
      * @const int column alignment right
      */
-    const ALIGN_RIGHT = 2;
+    public const ALIGN_RIGHT = 2;
 
     /**
      * @const int column alignment center
      */
-    const ALIGN_CENTER = 3;
+    public const ALIGN_CENTER = 3;
 
     /**
      * @var string column title
