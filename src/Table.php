@@ -157,7 +157,7 @@ class Table
                 if (array_key_exists($pos, $row)) {
                     $cell = filter_var(
                         (string)$row[$pos],
-                        FILTER_SANITIZE_STRING,
+                        FILTER_SANITIZE_SPECIAL_CHARS,
                         FILTER_FLAG_STRIP_BACKTICK | FILTER_FLAG_STRIP_LOW
                     );
                     $column->setMaxLength(mb_strlen($cell));

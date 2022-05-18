@@ -80,7 +80,7 @@ class Column
 
         $this->title = filter_var(
             $title,
-            FILTER_SANITIZE_STRING,
+            FILTER_SANITIZE_SPECIAL_CHARS,
             FILTER_FLAG_STRIP_BACKTICK | FILTER_FLAG_STRIP_LOW | FILTER_FLAG_STRIP_HIGH
         );
 
