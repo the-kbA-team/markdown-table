@@ -1,7 +1,7 @@
 # markdown-table
 
 [![License: MIT][license-mit]](LICENSE)
-[![Build Status][build-status-master]][travis-ci]
+[![PHP Composer & PHPUnit]][GitHub actions]
 [![Maintainability][maintainability-badge]][maintainability]
 [![Test Coverage][coverage-badge]][coverage]
 
@@ -85,8 +85,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 [license-mit]: https://img.shields.io/badge/license-MIT-blue.svg
-[travis-ci]: https://travis-ci.org/the-kbA-team/markdown-table "the-kbA-team/markdown-table - Travis CI"
-[build-status-master]: https://api.travis-ci.org/the-kbA-team/markdown-table.svg?branch=master
+[PHP Composer & PHPUnit]: https://github.com/the-kbA-team/markdown-table/actions/workflows/php.yml/badge.svg
+[GitHub actions]: https://github.com/the-kbA-team/markdown-table/actions/workflows/php.yml
 [maintainability-badge]: https://api.codeclimate.com/v1/badges/ef2542e986fda45f718f/maintainability
 [maintainability]: https://codeclimate.com/github/the-kbA-team/markdown-table/maintainability
 [coverage-badge]: https://api.codeclimate.com/v1/badges/ef2542e986fda45f718f/test_coverage
