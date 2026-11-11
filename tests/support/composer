@@ -1,0 +1,21 @@
+#!/bin/sh
+set -eu
+
+printf '%s\n' "$*" >> "$MOCK_LOG"
+if [ "$1" = config ] && [ "${MOCK_CONFIG_STATUS:-0}" != 0 ]; then
+    echo 'Configuration failed.' >&2
+    exit "$MOCK_CONFIG_STATUS"
+fi
+case "$1 $2" in
+    'config platform.php')
+        php -r '$f = getenv("COMPOSER") ?: "composer.json"; $d = json_decode(file_get_contents($f)); $d->config = $d->config ?? new stdClass; $d->config->platform = $d->config->platform ?? new stdClass; $d->config->platform->php = $argv[1]; file_put_contents($f, json_encode($d));' "$3"
+        ;;
+    'config --unset')
+        php -r '$f = getenv("COMPOSER") ?: "composer.json"; $d = json_decode(file_get_contents($f)); if ($argv[1] === "platform") { unset($d->config->platform); } elseif (isset($d->config->platform)) { unset($d->config->platform->php); } file_put_contents($f, json_encode($d));' "$3"
+        ;;
+    update*)
+        php -r '$d = json_decode(file_get_contents(getenv("COMPOSER"))); if ($d->config->platform->php !== "8.3" || isset($d->config->platform->{"ext-example"}) || !$d->config->{"sort-packages"}) exit(1);'
+        touch composer.lock "${COMPOSER%.json}.lock"
+        exit "${MOCK_COMPOSER_STATUS:-0}"
+        ;;
+esac

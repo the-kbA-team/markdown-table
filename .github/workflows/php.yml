@@ -1,4 +1,4 @@
-name: PHP PHPUnit
+name: PHP Composer & PHPUnit
 
 on: [push, pull_request]
 
@@ -16,14 +16,55 @@ jobs:
         with:
           php-version: ${{ matrix.php-version }}
           extensions: mbstring
-          coverage: none
+          coverage: ${{ matrix.php-version == '7.4' && 'xdebug' || 'none' }}
       - name: Install dependencies
         run: make install PHP_VERSION=${{ matrix.php-version }} ${{ matrix.php-version == '7.1' && 'COMPOSER_NO_DEV=1' || '' }}
       - name: Ensure composer.lock is absent
         run: test ! -e composer.lock
-      - name: Run PHPUnit
+      - name: Validate composer.json
+        run: make validate
+      - name: Audit dependencies
         if: matrix.php-version != '7.1'
-        run: make test PHP_VERSION=${{ matrix.php-version }}
-      - name: Check PHP 7.1 syntax
-        if: matrix.php-version == '7.1'
+        run: make audit
+      - name: Check PHP syntax
         run: make lint PHP_VERSION=${{ matrix.php-version }}
+      - name: Run PHPUnit
+        if: matrix.php-version != '7.1' && matrix.php-version != '7.4'
+        run: make test PHP_VERSION=${{ matrix.php-version }}
+      - name: Run PHPUnit with coverage
+        if: matrix.php-version == '7.4'
+        env:
+          XDEBUG_MODE: coverage
+        run: |
+          make test PHP_VERSION=${{ matrix.php-version }} PHPUNIT_ARGS='--coverage-clover coverage.xml'
+          test -s coverage.xml
+      - name: Upload coverage
+        if: matrix.php-version == '7.4'
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-clover
+          path: coverage.xml
+          if-no-files-found: error
+      - name: Smoke-test PHP 7.1
+        if: matrix.php-version == '7.1'
+        run: php tests/smoke.php
+      - name: Check install cleanup and flags
+        if: matrix.php-version == '8.3'
+        run: tests/test-make-install.sh
+
+  lowest-dependencies:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup PHP 7.4
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+          extensions: mbstring
+          coverage: none
+      - name: Install lowest dependencies
+        run: make install PHP_VERSION=7.4 DEPENDENCIES_LOWEST=1
+      - name: Ensure composer.lock is absent
+        run: test ! -e composer.lock
+      - name: Run PHPUnit
+        run: make test PHP_VERSION=7.4

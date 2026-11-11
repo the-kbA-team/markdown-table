@@ -6,17 +6,19 @@ COMPOSER_CACHE_DIR := $(HOME)/.cache/composer
 DOCKER_USER        := --user "$$(id -u)":"$$(id -g)"
 DOCKER_MOUNT       := --volume "$$(pwd)":/app --workdir /app
 
-ifdef DEPENDENCIES_LOWEST
+ifeq ($(DEPENDENCIES_LOWEST),1)
 COMPOSER_LOWEST := --prefer-lowest
 endif
 
-ifdef COMPOSER_NO_DEV
+ifeq ($(COMPOSER_NO_DEV),1)
 COMPOSER_NO_DEV_OPTION := --no-dev
+# Composer still resolves require-dev with --no-dev, so remove PHPUnit from the temporary manifest.
+COMPOSER_NO_DEV_PREPARE := composer remove --dev phpunit/phpunit --no-update --no-interaction &&
 endif
 
 ifdef CA_CERT_FILE
 CA_MOUNT := --volume "$(CA_CERT_FILE)":/usr/local/share/ca-certificates/extra-ca.crt:ro
-CA_TRUST_CMD := update-ca-certificates >/dev/null &&
+CA_ENV := --env COMPOSER_CAFILE=/usr/local/share/ca-certificates/extra-ca.crt
 endif
 
 .PHONY: help clean check-php-version install test lint audit validate
@@ -34,30 +36,34 @@ check-php-version:
 		exit 1; \
 	fi
 
-install: check-php-version ## Resolve dependencies for PHP_VERSION without retaining composer.lock
-	@mkdir -p "$(COMPOSER_CACHE_DIR)"
-	@set +e; \
+install: ## Resolve dependencies for PHP_VERSION without retaining composer.lock
+	@manifest=".composer-install-$$$$.json"; \
+	lock="$${manifest%.json}.lock"; \
+	owned=; \
+	trap 'if [ -n "$$owned" ]; then rm -f "$$manifest" "$$lock"; fi; rm -f composer.lock' 0; \
+	trap 'exit 1' HUP INT TERM; \
+	$(MAKE) --no-print-directory -f "$(firstword $(MAKEFILE_LIST))" check-php-version || exit $$?; \
+	mkdir -p "$(COMPOSER_CACHE_DIR)" || exit $$?; \
+	( set -C; : > "$$manifest" ) 2>/dev/null || { echo "Error: cannot create $$manifest" >&2; exit 1; }; \
+	owned=1; \
+	cp composer.json "$$manifest" || exit $$?; \
 	docker run --rm --init $(DOCKER_USER) \
 		--env HTTP_PROXY --env HTTPS_PROXY --env NO_PROXY \
+		--env http_proxy --env https_proxy --env no_proxy \
 		--env COMPOSER_CACHE_DIR=/composer-cache \
+		--env "COMPOSER=$$manifest" \
 		--volume "$(COMPOSER_CACHE_DIR)":/composer-cache \
-		$(CA_MOUNT) \
+		$(CA_MOUNT) $(CA_ENV) \
 		$(DOCKER_MOUNT) \
 		$(COMPOSER_IMAGE) sh -c '\
-			$(CA_TRUST_CMD) \
+			composer config --unset platform && \
+			$(COMPOSER_NO_DEV_PREPARE) \
 			composer config platform.php "$(PHP_VERSION)" && \
-			composer update $(COMPOSER_LOWEST) $(COMPOSER_NO_DEV_OPTION) --prefer-dist --no-interaction --no-progress; \
-			status=$$?; \
-			composer config --unset platform.php >/dev/null 2>&1 || true; \
-			if grep -Eq \"config\"[[:space:]]*:[[:space:]]*\{[[:space:]]*\} composer.json; then composer config --unset config >/dev/null 2>&1 || true; fi; \
-			rm -f composer.lock; \
-			exit $$status'; \
-	status=$$?; \
-	rm -f composer.lock; \
-	exit $$status
+			composer update $(COMPOSER_LOWEST) $(COMPOSER_NO_DEV_OPTION) --prefer-dist --no-interaction --no-progress'
 
 test: check-php-version ## Run PHPUnit with the selected host PHP version
-	php vendor/bin/phpunit
+	@test -x vendor/bin/phpunit || { echo "Error: vendor/bin/phpunit is missing; run make install with dev dependencies." >&2; exit 1; }
+	php vendor/bin/phpunit $(PHPUNIT_ARGS)
 
 lint: check-php-version ## Syntax-check PHP files in src/ and tests/
 	find src tests -type f -name '*.php' -print0 | xargs -0 -n1 php -l
@@ -65,8 +71,9 @@ lint: check-php-version ## Syntax-check PHP files in src/ and tests/
 audit: ## Check dependencies for known vulnerabilities
 	docker run --rm --init $(DOCKER_USER) \
 		--env HTTP_PROXY --env HTTPS_PROXY --env NO_PROXY \
-		$(CA_MOUNT) $(DOCKER_MOUNT) \
-		$(COMPOSER_IMAGE) sh -c '$(CA_TRUST_CMD) composer audit'
+		--env http_proxy --env https_proxy --env no_proxy \
+		$(CA_MOUNT) $(CA_ENV) $(DOCKER_MOUNT) \
+		$(COMPOSER_IMAGE) composer audit
 
 validate: ## Validate composer.json
 	docker run --rm --init $(DOCKER_USER) $(DOCKER_MOUNT) \

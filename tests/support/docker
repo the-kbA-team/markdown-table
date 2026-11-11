@@ -1,0 +1,21 @@
+#!/bin/sh
+set -eu
+
+if [ "${MOCK_DOCKER_FAIL:-0}" = 1 ]; then
+    printf 'startup failure\n' >&2
+    exit 42
+fi
+
+while [ "$#" -gt 0 ]; do
+    case "$1" in
+        --env)
+            case "$2" in COMPOSER=*) export "$2";; esac
+            shift 2
+            ;;
+        --user|--volume|--workdir) shift 2 ;;
+        run|--rm|--init) shift ;;
+        composer:2) shift; break ;;
+        *) echo "Unexpected docker argument: $1" >&2; exit 1 ;;
+    esac
+done
+exec "$@"

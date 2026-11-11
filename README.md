@@ -2,8 +2,6 @@
 
 [![License: MIT][license-mit]](LICENSE)
 [![PHP Composer & PHPUnit]][GitHub actions]
-[![Maintainability][maintainability-badge]][maintainability]
-[![Test Coverage][coverage-badge]][coverage]
 
 Create a [Markdown][markdown] table containing your data.
 
@@ -42,25 +40,45 @@ foreach ($table->generate($data) as $row) {
 Result:
 
 ```markdown
- Column A | another Column 
- -------: | :------------- 
- markdown | is             
-    great | software       
+| Column A | another Column |
+|---------:|:---------------|
+| markdown | is             |
+|    great | software       |
 ```
 
 ## Testing
 
-Get [composer][composer], and install the dependencies.
+Development requires Docker, Make, and a host PHP version matching the selected
+version, with mbstring installed. Composer runs in Docker; `PHP_VERSION` selects
+the dependency platform but does not change the host PHP executable.
 
 ```sh
-composer install
+make help
+make install PHP_VERSION=8.3
+make lint PHP_VERSION=8.3
+make test PHP_VERSION=8.3
+make validate
+make audit
 ```
 
-Call phpunit to run the tests available. You'll see not only the results of the tests but the code coverage too.
+Install resolves dependencies without retaining `composer.lock`, using the
+Composer cache in `~/.cache/composer`. It forwards proxy environment variables;
+set `CA_CERT_FILE` to a PEM CA bundle if a custom certificate is needed.
+Existing Composer configuration is preserved. To test the lowest compatible
+dependencies, run:
 
 ```sh
-vendor/bin/phpunit
+make install PHP_VERSION=7.4 DEPENDENCIES_LOWEST=1
+make test PHP_VERSION=7.4
 ```
+
+Production supports PHP 7.1, but PHPUnit 8.5 requires a newer PHP version.
+The 7.1 CI job installs production dependencies only, lints, and runs a rendering
+smoke test; PHPUnit runs on 7.4 and 8.0–8.4. To reproduce the production
+installation, use `make install PHP_VERSION=7.1 COMPOSER_NO_DEV=1` and
+`php tests/smoke.php` with PHP 7.1. CI publishes Clover coverage from PHP 7.4
+as an artifact; PHPUnit 8 cannot collect coverage on PHP 8. Run
+`tests/test-make-install.sh` to check install cleanup and flags without Docker.
 
 ## [MIT License](LICENSE)
 
@@ -87,9 +105,4 @@ SOFTWARE.
 [license-mit]: https://img.shields.io/badge/license-MIT-blue.svg
 [PHP Composer & PHPUnit]: https://github.com/the-kbA-team/markdown-table/actions/workflows/php.yml/badge.svg
 [GitHub actions]: https://github.com/the-kbA-team/markdown-table/actions/workflows/php.yml
-[maintainability-badge]: https://api.codeclimate.com/v1/badges/ef2542e986fda45f718f/maintainability
-[maintainability]: https://codeclimate.com/github/the-kbA-team/markdown-table/maintainability
-[coverage-badge]: https://api.codeclimate.com/v1/badges/ef2542e986fda45f718f/test_coverage
-[coverage]: https://codeclimate.com/github/the-kbA-team/markdown-table/test_coverage
 [markdown]: https://daringfireball.net/projects/markdown/ "Markdown is a text-to-HTML conversion tool for web writers."
-[composer]: https://getcomposer.org/ "Dependency Manager for PHP"
